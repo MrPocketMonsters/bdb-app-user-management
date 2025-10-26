@@ -16,7 +16,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +30,7 @@ import lombok.Setter;
 
 /**
  * Entity representing a user in the system.
- * Maps to the "user" table in the database.
+ * Maps to the "appuser" table in the database.
  * 
  * @author Nicolás Sabogal
  */
@@ -37,16 +41,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-    name = "user",
-    uniqueConstraints = @UniqueConstraint(columnNames = "email_user")
+    name = "appuser",
+    uniqueConstraints = @UniqueConstraint(columnNames = "email_appuser")
 )
 public class User implements UserDetails {
     
     /** Unique identifier for the user */
     @Id
-    @NotEmpty
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "seq_appuser"
+    )
+    @SequenceGenerator(
+        name = "seq_appuser",
+        sequenceName = "seq_appuser",
+        allocationSize = 1
+    )
+    @NotNull
     @Column(
-        name = "id_user",
+        name = "id_appuser",
         nullable = false
     )
     private Long id;
@@ -55,7 +68,7 @@ public class User implements UserDetails {
     @Email
     @NotEmpty
     @Column(
-        name = "email_user",
+        name = "email_appuser",
         length = 64,
         nullable = false
     )
@@ -64,7 +77,7 @@ public class User implements UserDetails {
     /** Password of the user */
     @NotEmpty
     @Column(
-        name = "password_user",
+        name = "password_appuser",
         length = 128,
         nullable = false
     )
@@ -73,7 +86,7 @@ public class User implements UserDetails {
     /** Name of the user */
     @NotEmpty
     @Column(
-        name = "name_user",
+        name = "name_appuser",
         length = 64,
         nullable = false
     )
@@ -81,7 +94,7 @@ public class User implements UserDetails {
     
     /** Timestamp when the user was created */
     @Column(
-        name = "created_at_user",
+        name = "created_at_appuser",
         nullable = false,
         updatable = false
     )
@@ -91,9 +104,9 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = Role.class)
     @CollectionTable(
         name = "role",
-        joinColumns = @JoinColumn(name = "user_id")
+        joinColumns = @JoinColumn(name = "id_appuser")
     )
-    @Column(name = "user_roles")
+    @Column(name = "roles_appuser")
     private Set<Role> roles;
 
     /** Get the authorities granted to the user */
