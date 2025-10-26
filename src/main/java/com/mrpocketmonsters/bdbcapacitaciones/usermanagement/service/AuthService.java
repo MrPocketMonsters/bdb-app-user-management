@@ -1,5 +1,10 @@
 package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service;
 
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginRequest;
@@ -19,8 +24,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-    /** User repository for accessing user data */
-    private final UserRepository userRepository;
+    /** Authentication manager for handling authentication */
+    private final AuthenticationManager authenticationManager;
+
+    /** JWT Service for handling JWT operations */
+    private final JwtService jwtService;
+
+    /** Environment for accessing application properties */
+    private final Environment environment;
 
     /**
      * Handles user login.
@@ -29,8 +40,16 @@ public class AuthService {
      * @return The response object containing JWT token and expiration time.
      */
     public LoginResponse login(LoginRequest loginRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'login'");
+        Authentication authentication = authenticationManager
+            .authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(),
+                loginRequest.getPassword()
+            ));
+
+        String token = jwtService.getToken((UserDetails) authentication.getPrincipal());
+        Long expirationTime = environment.getProperty("jwt.expiration.time", Long.class);
+
+        return new LoginResponse(token, "Bearer", expirationTime);
     }
 
     /**
@@ -39,7 +58,7 @@ public class AuthService {
      * @param registerRequest The registration request containing user details.
      * @return The response object containing JWT token and expiration time.
      */
-    public RegisterResponse register(RegisterRequest registerRequest) {
+    public void register(RegisterRequest registerRequest) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'register'");
     }
