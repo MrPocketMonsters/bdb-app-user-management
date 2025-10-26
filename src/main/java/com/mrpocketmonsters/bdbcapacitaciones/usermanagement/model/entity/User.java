@@ -1,7 +1,12 @@
 package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.entity;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -35,7 +40,7 @@ import lombok.Setter;
     name = "user",
     uniqueConstraints = @UniqueConstraint(columnNames = "email_user")
 )
-public class User {
+public class User implements UserDetails {
     
     /** Unique identifier for the user */
     @Id
@@ -90,5 +95,19 @@ public class User {
     )
     @Column(name = "user_roles")
     private Set<Role> roles;
+
+    /** Get the authorities granted to the user */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+            .map(role -> new SimpleGrantedAuthority(role.name()))
+            .toList();
+    }
+
+    /** Get the username of the user */
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
     
 }
