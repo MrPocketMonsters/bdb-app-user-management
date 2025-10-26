@@ -15,9 +15,9 @@ Módulo responsable de registrar usuarios y autentificarlos; emite tokens JWT tr
 - Body (JSON):
 ```json
 {
-  "username": "juan.perez",
   "email": "juan@ejemplo.com",
-  "password": "P@ssw0rd!"
+  "password": "P@ssw0rd!",
+  "name": "juan perez"
 }
 ```
 - Respuestas típicas:
@@ -29,7 +29,7 @@ Módulo responsable de registrar usuarios y autentificarlos; emite tokens JWT tr
 - Body (JSON):
 ```json
 {
-  "username": "juan.perez",
+  "email": "juan@ejemplo.com",
   "password": "P@ssw0rd!"
 }
 ```
