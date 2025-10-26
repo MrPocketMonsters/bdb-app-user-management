@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.ExceptionResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.UserListElement;
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,15 +30,19 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Method to get all user names.
+     * Method to get all users without exposing passwords.
      * 
-     * @return ResponseEntity containing a list of all user names.
+     * @return ResponseEntity containing a list of all users.
      */
-    @GetMapping("/names")
-    public ResponseEntity<?> getAllNames() {
+    @GetMapping("/")
+    public ResponseEntity<?> getAllUsers() {
         try {
-            List<String> userNames = userService.getAllUserNames();
-            return ResponseEntity.ok(userNames);
+            List<User> users = userService.getAllUsers();
+            return ResponseEntity.ok(
+                users.stream()
+                    .map(user -> UserListElement.of(user))
+                    .toList()
+            );
         } catch (Exception exception) {
             ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), exception);
             return ResponseEntity.internalServerError().body(exceptionResponse);

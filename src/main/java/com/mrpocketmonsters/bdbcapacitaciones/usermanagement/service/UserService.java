@@ -36,13 +36,19 @@ public class UserService {
     }
 
     /**
-     * Retrieves a list of all user names.
+     * Retrieves a list of all users with passwords set to null.
      * 
-     * @return A list of all user names.
+     * @return A list of all users.
      */
-    public List<String> getAllUserNames() {
+    public List<User> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> user.getName()).toList();
+        return users.stream()
+            .map(user -> {
+                user.setPassword(null);
+                return user;
+            })
+            .toList();
     }
-    
+
+
 }
