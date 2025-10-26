@@ -53,6 +53,7 @@ public class ApplicationConfiguration {
      * @return The AuthenticationManager instance
      * @throws Exception if an error occurs while retrieving the AuthenticationManager
      */
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
