@@ -1,9 +1,12 @@
 package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,16 @@ public class UserService {
     public UserDetails loadUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+    }
+
+    /**
+     * Retrieves a list of all user names.
+     * 
+     * @return A list of all user names.
+     */
+    public List<String> getAllUserNames() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(user -> user.getName()).toList();
     }
     
 }

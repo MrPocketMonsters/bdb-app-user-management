@@ -42,6 +42,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Allow access to authentication endpoints without authentication
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                // Allow access to user-related endpoints without authentication
+                .requestMatchers("/api/v1/users/**").permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
             )
