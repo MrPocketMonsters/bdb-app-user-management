@@ -50,7 +50,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            return ResponseEntity.ok(authService.register(registerRequest));
+            authService.register(registerRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
         }
