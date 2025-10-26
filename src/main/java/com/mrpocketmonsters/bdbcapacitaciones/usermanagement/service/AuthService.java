@@ -1,5 +1,6 @@
 package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,6 +83,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
+                .createdAt(Instant.now())
                 .roles(roles)
                 .build();
 
