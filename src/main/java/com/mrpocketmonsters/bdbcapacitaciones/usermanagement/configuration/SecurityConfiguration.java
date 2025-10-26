@@ -10,6 +10,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.entity.Role;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -42,8 +44,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Allow access to authentication endpoints without authentication
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                // Allow access to user-related endpoints without authentication
-                .requestMatchers("/api/v1/users/**").permitAll()
+                // Allow access to user-related endpoints only for ADMIN role
+                .requestMatchers("/api/v1/users/**").hasAuthority(Role.ADMIN.name())
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
             )

@@ -1,7 +1,6 @@
 package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.core.env.Environment;
@@ -77,14 +76,12 @@ public class AuthService {
             throw new IllegalArgumentException("The email " + request.getEmail() + " is already in use");
         }
         
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.USER);
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .createdAt(Instant.now())
-                .roles(roles)
+                .roles(Set.of(Role.USER))
                 .build();
 
         userRepository.save(user);
@@ -100,6 +97,27 @@ public class AuthService {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         if (email == null || !email.matches(emailRegex)) {
             throw new IllegalArgumentException("Error: the email " + email + " is invalid");
+        }
+    }
+
+    /**
+     * Creates a default admin user if one does not already exist.
+     */
+    public void createAdminUserIfNotExists() {
+        final String adminName = "Admin User";
+        final String adminEmail = "admin@example.com";
+        final String adminPassword = "adminpassword";
+
+        if (!userRepository.findByEmail(adminEmail).isPresent()) {
+            User adminUser = User.builder()
+                .name(adminName)
+                .email(adminEmail)
+                .password(passwordEncoder.encode(adminPassword))
+                .createdAt(Instant.now())
+                .roles(Set.of(Role.ADMIN, Role.USER))
+                .build();
+
+            userRepository.save(adminUser);
         }
     }
 
