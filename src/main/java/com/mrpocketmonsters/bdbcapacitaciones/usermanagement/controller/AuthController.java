@@ -3,14 +3,15 @@ package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.ExceptionResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.RegisterRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.AuthService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -37,7 +38,8 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.login(loginRequest));
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception);
+            ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), exception);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
         }
     }
 
@@ -53,7 +55,8 @@ public class AuthController {
             authService.register(registerRequest);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
+            ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), exception);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
         }
     }
 
