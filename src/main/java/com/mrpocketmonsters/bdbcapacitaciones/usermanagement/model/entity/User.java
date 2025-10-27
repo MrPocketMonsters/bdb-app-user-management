@@ -91,6 +91,15 @@ public class User implements UserDetails {
         nullable = false
     )
     private String name;
+
+    /** Indicates whether the user is enabled for authentication */
+    @NotNull
+    @Column(
+        name = "enabled_appuser",
+        nullable = false
+    )
+    @Builder.Default
+    private boolean enabled = true;
     
     /** Timestamp when the user was created */
     @Column(
@@ -121,6 +130,12 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    /** Check if the user account is enabled for authentication */
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
     }
     
 }
