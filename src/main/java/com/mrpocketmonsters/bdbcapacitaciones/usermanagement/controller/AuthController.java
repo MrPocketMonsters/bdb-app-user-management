@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.ExceptionResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginRequest;
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.RegisterRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.AuthService;
 
@@ -34,13 +34,8 @@ public class AuthController {
      * @return The response entity containing the login response or error details if login fails.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            return ResponseEntity.ok(authService.login(loginRequest));
-        } catch (Exception exception) {
-            ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), exception);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
-        }
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     /** 
@@ -50,14 +45,9 @@ public class AuthController {
      * @return The response entity containing the registration response or error details if registration fails.
      */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            authService.register(registerRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (Exception exception) {
-            ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), exception);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
-        }
+    public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
+        authService.register(registerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }
