@@ -2,7 +2,6 @@ package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class UserService {
      * @return The UserDetails of the found user.
      * @throws UsernameNotFoundException if the user is not found.
      */
-    public UserDetails loadUserByEmail(String email) {
+    public User loadUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
     }
