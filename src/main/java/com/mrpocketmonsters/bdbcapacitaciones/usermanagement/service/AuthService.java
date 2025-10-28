@@ -131,16 +131,14 @@ public class AuthService {
      * @throws IllegalArgumentException if the current password is incorrect.
      */
     public User changePassword(String email, String oldPassword, String newPassword) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(email, oldPassword)
+        );
+
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " not found"));
 
-        oldPassword = passwordEncoder.encode(oldPassword);
-        newPassword = passwordEncoder.encode(newPassword);
-
-        if (!user.getPassword().equals(oldPassword)) {
-            throw new IllegalArgumentException("Current password is incorrect");
-        }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(user);
     }
 
