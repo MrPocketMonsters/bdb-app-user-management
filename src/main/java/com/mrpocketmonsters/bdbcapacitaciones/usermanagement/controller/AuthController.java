@@ -3,12 +3,14 @@ package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.PasswordChangeRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.RegisterRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.AuthService;
 
@@ -48,6 +50,24 @@ public class AuthController {
     public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * Method to change a user's password.
+     * 
+     * @param id The ID of the user whose password is to be changed.
+     * @param passwordChangeRequest The PasswordChangeRequest containing current and new passwords.
+     * @return UserDto containing the user details after password change.
+     */
+    @PutMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+        authService.changePassword(
+            passwordChangeRequest.getEmail(),
+            passwordChangeRequest.getCurrentPassword(),
+            passwordChangeRequest.getNewPassword()
+        );
+
+        return ResponseEntity.ok().build();
     }
 
 }

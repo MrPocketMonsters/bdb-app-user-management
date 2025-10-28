@@ -121,4 +121,29 @@ public class AuthService {
         }
     }
 
+    /**
+     * Changes a user's password.
+     * 
+     * @param id The ID of the user whose password is to be changed.
+     * @param oldPassword The current password of the user.
+     * @param newPassword The new password to set for the user.
+     * @return The updated User with the new password.
+     * @throws IllegalArgumentException if the current password is incorrect.
+     */
+    public User changePassword(String email, String oldPassword, String newPassword) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " not found"));
+
+        oldPassword = passwordEncoder.encode(oldPassword);
+        newPassword = passwordEncoder.encode(newPassword);
+
+        if (!user.getPassword().equals(oldPassword)) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        user.setPassword(newPassword);
+        return userRepository.save(user);
+    }
+
+
+
 }
