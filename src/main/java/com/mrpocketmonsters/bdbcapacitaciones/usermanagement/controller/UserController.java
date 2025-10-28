@@ -56,9 +56,9 @@ public class UserController {
      * @return UserDto containing user details.
      */
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        return UserDto.of(user);
+        return ResponseEntity.ok(UserDto.of(user));
     }
     
     /**
@@ -69,12 +69,12 @@ public class UserController {
      * @return UserDto containing the modified user details.
      */
     @PostMapping("/{id}")
-    public UserDto modifyUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> modifyUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         if (userDto.getId() != null && !id.equals(userDto.getId()))
             throw new IllegalArgumentException("ID in path and body do not match");
             
         User user = userService.updateUser(userDto);
-        return UserDto.of(user);
+        return ResponseEntity.ok(UserDto.of(user));
     }
     
     /**
@@ -83,10 +83,12 @@ public class UserController {
      * @param id The ID of the user to disable.
      */
     @DeleteMapping("/{id}")
-    public void disableUser(@PathVariable Long id) {
+    public ResponseEntity<Void> disableUser(@PathVariable Long id) {
         User user = userService.disableUser(id);
         if (user.isEnabled())
             throw new IllegalStateException("User could not be disabled");
-    }
     
+        return ResponseEntity.ok().build();
+    }
+
 }
