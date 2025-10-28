@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.UserDto;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.UserListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.UserService;
@@ -11,8 +12,13 @@ import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.UserService
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 /**
@@ -41,6 +47,46 @@ public class UserController {
                 .map(user -> UserListElement.of(user))
                 .toList()
         );
+    }
+
+    /**
+     * Method to get a user by their ID.
+     * 
+     * @param id The ID of the user to retrieve.
+     * @return UserDto containing user details.
+     */
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return UserDto.of(user);
+    }
+    
+    /**
+     * Method to modify a user's details.
+     * 
+     * @param id The ID of the user to modify.
+     * @param userDto The UserDto containing updated user details.
+     * @return UserDto containing the modified user details.
+     */
+    @PostMapping("/{id}")
+    public UserDto modifyUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        if (userDto.getId() != null && !id.equals(userDto.getId()))
+            throw new IllegalArgumentException("ID in path and body do not match");
+            
+        User user = userService.updateUser(userDto);
+        return UserDto.of(user);
+    }
+    
+    /**
+     * Method to disable a user by their ID.
+     * 
+     * @param id The ID of the user to disable.
+     */
+    @DeleteMapping("/{id}")
+    public void disableUser(@PathVariable Long id) {
+        User user = userService.disableUser(id);
+        if (user.isEnabled())
+            throw new IllegalStateException("User could not be disabled");
     }
     
 }
