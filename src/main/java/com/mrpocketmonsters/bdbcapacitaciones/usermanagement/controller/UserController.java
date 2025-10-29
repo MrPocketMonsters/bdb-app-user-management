@@ -91,4 +91,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Method to get a user by their email.
+     * 
+     * @param email The email of the user to retrieve.
+     * @return UserDto containing user details.
+     */
+    @GetMapping("/email")
+    public ResponseEntity<UserDto> getUserByEmail(@RequestBody String email) {
+        User user = userService.loadUserByEmail(email);
+        return ResponseEntity.ok(UserDto.of(user));
+    }
+
 }

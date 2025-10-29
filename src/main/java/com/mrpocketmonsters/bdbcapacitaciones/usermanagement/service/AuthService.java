@@ -67,9 +67,9 @@ public class AuthService {
      * Handles user registration.
      * 
      * @param registerRequest The registration request containing user details.
-     * @return The response object containing JWT token and expiration time.
+     * @return The newly registered User.
      */
-    public void register(RegisterRequest request) {
+    public User register(RegisterRequest request) {
         validateEmailFormat(request.getEmail());
 
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -84,7 +84,7 @@ public class AuthService {
                 .roles(Set.of(Role.USER))
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     /**

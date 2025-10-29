@@ -12,6 +12,7 @@ import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginRequ
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.LoginResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.PasswordChangeRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.RegisterRequest;
+import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.model.dto.UserIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.usermanagement.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,10 @@ public class AuthController {
      * @return The response entity containing the registration response or error details if registration fails.
      */
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
-        authService.register(registerRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserIdentifierDto> register(@RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            UserIdentifierDto.of(authService.register(registerRequest))
+        );
     }
 
     /**
