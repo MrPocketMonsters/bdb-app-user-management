@@ -32,7 +32,7 @@ public class WebConfiguration {
         return request -> {
             var configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(List.of(environment.getProperty("cors.url")));
-            configuration.setAllowedMethods(List.of("POST", "OPTIONS"));
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             configuration.setAllowedHeaders(List.of("*"));
             configuration.setAllowCredentials(true);
 
