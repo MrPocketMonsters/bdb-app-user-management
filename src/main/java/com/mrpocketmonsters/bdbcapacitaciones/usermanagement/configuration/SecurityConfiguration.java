@@ -2,6 +2,7 @@ package com.mrpocketmonsters.bdbcapacitaciones.usermanagement.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -44,7 +45,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Allow access to authentication endpoints without authentication
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                // Allow access to user-related endpoints only for ADMIN role
+                // Allow access to user-related endpoints only for authenticated users in GET and ADMIN in the rest
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/**").authenticated()
                 .requestMatchers("/api/v1/users/**").hasAuthority(Role.ADMIN.name())
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
